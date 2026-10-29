@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КМ 01 — Мәселені талдау және StarUML</title>
+<style>
+:root{--paper:#eef2f6;--card:#fff;--ink:#12263a;--mute:#51657a;--line:#c9d4df;--blue:#2457d6;--hl:#ffd84d;--ok:#1a7f5a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font:17px/1.6 Arial,Helvetica,sans-serif;color:var(--ink);background:var(--paper);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px;background-attachment:fixed}
+a{color:var(--blue)}
+nav{position:sticky;top:0;z-index:5;background:var(--ink);display:flex;gap:4px;overflow-x:auto;padding:10px 14px}
+nav a{color:#dbe6f2;text-decoration:none;padding:6px 12px;border-radius:6px;white-space:nowrap;font-size:15px}
+nav a:hover,nav a:focus-visible{background:#24425f;outline:none}
+main{max-width:860px;margin:0 auto;padding:0 18px 80px}
+section{padding:48px 0 8px}
+h1{font-size:clamp(32px,6vw,52px);line-height:1.1;margin:0 0 16px;letter-spacing:-.5px}
+h2{font-size:28px;margin:0 0 14px;line-height:1.2}
+h3{font-size:19px;margin:22px 0 6px}
+p{margin:0 0 12px;max-width:68ch}
+.hero{padding-top:56px}
+.hero p{font-size:19px;color:var(--mute)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:22px 0}
+.flow span{background:var(--card);border:2px solid var(--ink);border-radius:6px;padding:8px 14px;font-weight:700}
+.flow i{font-style:normal;color:var(--blue);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.grid .card{margin:0}
+.tpl{background:var(--hl);border-radius:8px;padding:16px 18px;font-weight:700;margin:14px 0}
+.bad{border-left:4px solid #c0392b}.good{border-left:4px solid var(--ok)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+ol,ul{margin:6px 0 12px;padding-left:22px}
+li{margin:4px 0}
+.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden;margin:10px 0 6px}
+.bar div{height:100%;width:0;background:var(--ok);transition:width .3s}
+.task{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:10px 0}
+.task summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:center}
+.task summary::-webkit-details-marker{display:none}
+.task summary:focus-visible{outline:3px solid var(--blue);outline-offset:-3px;border-radius:10px}
+.task .body{padding:0 16px 14px 48px}
+.task input{width:22px;height:22px;accent-color:var(--ok);flex:none}
+.task.done{border-color:var(--ok)}
+.task.done summary span{text-decoration:line-through;color:var(--mute)}
+button,.btn{font:inherit;background:var(--ink);color:#fff;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block;margin:4px 6px 4px 0}
+button.alt{background:var(--card);color:var(--ink);border:2px solid var(--ink)}
+button:focus-visible,.btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+table{width:100%;border-collapse:collapse;background:var(--card);margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:#dde6ef}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:30px 18px}
+@media print{nav,.noprint{display:none}body{background:#fff}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav aria-label="Бөлімдер">
+<a href="#home">Басты бет</a><a href="#analysis">Мәселені талдау</a><a href="#goal">Мақсат</a><a href="#staruml">StarUML</a><a href="#tasks">Тапсырмалар</a><a href="#terms">Терминдер</a><a href="#submit">Тапсыру</a>
+</nav>
+<main>
+
+<section id="home" class="hero">
+<h1>Код жазбас бұрын мәселені түсін</h1>
+<p>КМ 01 · Бағдарламалық қамтамасыз етуді жобалау · 1-сабақ. Мәселені талдап, бағдарламаның мақсатын жазуды және StarUML-де алғашқы диаграмманы салуды үйренесің.</p>
+<div class="flow" aria-label="Жұмыс тәртібі"><span>Мәселе</span><i>→</i><span>Себептер</span><i>→</i><span>Пайдаланушылар</span><i>→</i><span>Мақсат</span><i>→</i><span>Міндеттер</span><i>→</i><span>Нәтиже</span></div>
+<div class="card"><b>Сабақ соңында сен:</b>
+<ul><li>мәселені түсіндіріп, берілген жағдайды талдайсың;</li><li>бағдарламаның мақсатын дұрыс тұжырымдайсың;</li><li>пайдаланушылар мен міндеттерді белгілейсің;</li><li>StarUML-де Use Case диаграммасын саласың.</li></ul></div>
+</section>
+
+<section id="analysis">
+<h2>Мәселені талдау</h2>
+<p>Бұл — қиындықты зерттеп, себебін анықтап, шешу жолын қарастыру. Бағдарламаны бастамас бұрын үш сұраққа жауап бер:</p>
+<div class="grid">
+<div class="card"><b>1. Қандай мәселе бар?</b></div>
+<div class="card"><b>2. Оны не үшін шешу керек?</b></div>
+<div class="card"><b>3. Бағдарламамен қалай шешеміз?</b></div>
+</div>
+<h3>Мысал: қағаз журнал</h3>
+<div class="card">Оқытушы қатысуды қағаз журналға қолмен белгілейді. Бірнеше айдың мәліметін жинау ұзақ, пайыз есептегенде қате кетеді, керек ақпаратты іздеу қиын.
+<p style="margin-top:10px"><b>Мәселе:</b> қатысуды есепке алу көп уақыт алады, есепте қате болуы мүмкін.<br><b>Шешім:</b> қатысуды тіркейтін және автоматты есептейтін бағдарлама.</p></div>
+<h3>Талдау кезеңдері</h3>
+<table><tr><th>Кезең</th><th>Не істейміз</th></tr>
+<tr><td>1. Мәселені анықтау</td><td>Қандай қиындық бар</td></tr>
+<tr><td>2. Себептерді табу</td><td>Неліктен пайда болды</td></tr>
+<tr><td>3. Пайдаланушылар</td><td>Бағдарламаны кім қолданады</td></tr>
+<tr><td>4. Мақсатты жазу</td><td>Бағдарлама не үшін жасалады</td></tr>
+<tr><td>5. Функциялар</td><td>Бағдарлама қандай әрекеттер орындайды</td></tr>
+<tr><td>6. Күтілетін нәтиже</td><td>Бағдарламадан кейін не өзгереді</td></tr></table>
+</section>
+
+<section id="goal">
+<h2>Мақсат пен міндет</h2>
+<div class="tpl">[Қандай мәселені] шешу үшін [кімге арналған] [қандай бағдарлама] әзірлеу</div>
+<p>Мысал: «Колледж студенттерінің сабаққа қатысуын есепке алу уақытын қысқарту және есептерді автоматты қалыптастыру үшін қатысуды есепке алу жүйесін әзірлеу».</p>
+<div class="cols">
+<div class="card bad"><b>Әлсіз мақсат</b><ul><li>«Бағдарлама жасау»</li><li>«Керемет жүйе құру»</li><li>«Студенттерге көмектесу»</li></ul>Мәселе, пайдаланушы, нәтиже жоқ.</div>
+<div class="card good"><b>Күшті мақсат</b><ul><li>Мәселе көрсетілген</li><li>Кімге арналғаны белгілі</li><li>Нәтиже нақты</li></ul></div>
+</div>
+<h3>Мақсат пен міндеттің айырмашылығы</h3>
+<div class="cols">
+<div class="card"><b>Мақсат</b> — соңында қандай нәтижеге жетеміз. Біреу ғана.<p style="margin-top:8px">Кітаптарды есепке алу мен іздеуді жеңілдететін кітапхана жүйесін әзірлеу.</p></div>
+<div class="card"><b>Міндеттер</b> — мақсатқа жету үшін нақты жұмыстар.<ol><li>Кітап ақпаратын енгізу</li><li>Тізімді сақтау</li><li>Атауы бойынша іздеу</li><li>Оқырмандарды тіркеу</li><li>Беру мен қайтаруды белгілеу</li><li>Есеп қалыптастыру</li></ol></div>
+</div>
+</section>
+
+<section id="staruml">
+<h2>StarUML: Use Case диаграммасы</h2>
+<p>Диаграмманы салмас бұрын мәселе мен мақсатты екі сөйлеммен жазып ал.</p>
+<table><tr><th>Элемент</th><th>Мағынасы</th><th>Мысал</th></tr>
+<tr><td>Actor</td><td>Жүйені қолданатын адам не рөл</td><td>Оқытушы</td></tr>
+<tr><td>Use Case</td><td>Пайдаланушының әрекеті</td><td>Бағаны енгізу</td></tr>
+<tr><td>Association</td><td>Actor мен әрекеттің байланысы</td><td>сызық</td></tr></table>
+<h3>Студенттердің бағаларын есептеу жүйесі</h3>
+<ol>
+<li>StarUML-ді ашып, жаңа жоба құр.</li><li>Use Case Diagram қос.</li><li>Actor орналастырып, атын «Оқытушы» деп өзгерт.</li><li>Үш Use Case қос: «Бағаны енгізу», «Орташа балды есептеу», «Нәтижені көру».</li><li>Association арқылы Actor-ды әрқайсысымен байланыстыр.</li><li>Жобаны сақта.</li>
+</ol>
+<svg viewBox="0 0 520 300" role="img" aria-label="Оқытушы үш әрекетпен байланысқан Use Case диаграммасы" style="width:100%;max-width:520px;background:#fff;border:1px solid var(--line);border-radius:10px">
+<circle cx="60" cy="110" r="18" fill="none" stroke="#12263a" stroke-width="3"/><path d="M60 128v50M30 148h60M60 178l-26 46M60 178l26 46" stroke="#12263a" stroke-width="3" fill="none"/>
+<text x="60" y="250" text-anchor="middle" font-family="Arial" font-size="15" fill="#12263a">Оқытушы</text>
+<rect x="150" y="16" width="355" height="268" rx="10" fill="none" stroke="#2457d6" stroke-width="2.5"/>
+<g stroke="#12263a" stroke-width="2"><path d="M90 148L230 70M90 148H230M90 148L230 226"/></g>
+<g fill="#fff" stroke="#2457d6" stroke-width="2.5"><ellipse cx="350" cy="70" rx="115" ry="34"/><ellipse cx="350" cy="148" rx="115" ry="34"/><ellipse cx="350" cy="226" rx="115" ry="34"/></g>
+<g font-family="Arial" font-size="15" fill="#12263a" text-anchor="middle"><text x="350" y="75">Бағаны енгізу</text><text x="350" y="153">Орташа балды есептеу</text><text x="350" y="231">Нәтижені көру</text></g></svg>
+</section>
+
+<section id="tasks">
+<h2>Практикалық тапсырмалар</h2>
+<p>Тапсырманы аш, орында, содан кейін белгі қой. Прогресс осы құрылғыда сақталады.</p>
+<div class="bar" role="progressbar" aria-label="Орындалу" aria-valuemin="0" aria-valuemax="8"><div id="fill"></div></div>
+<p><b id="count">0 / 8</b> орындалды</p>
+<div id="list"></div>
+<div class="noprint"><button id="save">Прогресті файлға сақтау</button><button id="load" class="alt">Файлдан жүктеу</button><button id="reset" class="alt">Тазалау</button><input type="file" id="file" accept=".json" hidden></div>
+</section>
+
+<section id="terms">
+<h2>Терминдер</h2>
+<div class="grid">
+<div class="card"><b>Мәселе</b><br>Шешілуі қажет қиындық.</div>
+<div class="card"><b>Мақсат</b><br>Бағдарлама не үшін жасалатынын сипаттайтын тұжырым.</div>
+<div class="card"><b>Міндет</b><br>Мақсатқа жету үшін орындалатын нақты жұмыс.</div>
+<div class="card"><b>Пайдаланушы</b><br>Бағдарламаны қолданатын адам.</div>
+<div class="card"><b>Күтілетін нәтиже</b><br>Бағдарламадан кейін болатын жақсару.</div>
+<div class="card"><b>StarUML</b><br>Жүйені UML диаграммалары арқылы жобалау құралы.</div>
+</div>
+</section>
+
+<section id="submit">
+<h2>Тапсыру және бағалау</h2>
+<table><tr><th>Критерий</th><th>Балл</th></tr>
+<tr><td>Мәселені дұрыс анықтайды</td><td>2</td></tr><tr><td>Себептерін түсіндіреді</td><td>2</td></tr><tr><td>Мақсатты тұжырымдайды</td><td>2</td></tr><tr><td>Пайдаланушыларды анықтайды</td><td>1</td></tr><tr><td>Міндеттер мен функцияларды жазады</td><td>1</td></tr><tr><td>Күтілетін нәтижені сипаттайды</td><td>1</td></tr><tr><td>Жұмысын қорғайды</td><td>1</td></tr><tr><th>Барлығы</th><th>10</th></tr></table>
+<p>Тапсыратын файл: <b>Фамилия_Топ.mdj</b> (StarUML жобасы) және диаграмманың суреті (PNG).</p>
+<a id="submitLink" class="btn noprint" href="#" target="_blank" rel="noopener">Жұмысты жіберу</a>
+</section>
+</main>
+<footer>КМ 01 · Бағдарламалық қамтамасыз етуді жобалау</footer>
+
+<script>
+var FORM_URL = "";
+var tasks = [
+["Мәселені анықта","Жағдай: оқытушы 100 студенттің бағасын қолмен есептейді. Жаз: мәселе, ықтимал себеп, бағдарламалық шешім. Басқа жағдай да ойлап тап."],
+["Мақсатты жаз","Үлгі бойынша кемінде 3 бағдарламаның мақсатын жаз: кітапхана жүйесі, интернет-дүкен, қонақүй брондау."],
+["Мақсат пен міндетті ажырат","Сөйлемдерді екі топқа бөл: «Студенттің аты-жөнін енгізу», «Бағаларды есептеуді автоматтандыратын бағдарлама әзірлеу», «Кітап атауын деректер қорына енгізу», «Жеке қаржыны басқару жүйесін әзірлеу»."],
+["Пайдаланушыларды анықта","Электрондық журнал, кітапхана жүйесі және интернет-дүкен үшін кемінде екі пайдаланушы рөлін жаз."],
+["Талдау кестесін толтыр","«Колледждің сабақ кестесін қарау жүйесі»: мәселе, себеп, пайдаланушы, мақсат, функциялар, күтілетін нәтиже."],
+["StarUML: жоба және Actor","Жаңа жоба құр, Use Case Diagram қос, «Оқытушы» Actor-ын орналастыр. Диаграммадан бұрын мәселе мен мақсатты екі сөйлеммен жаз."],
+["StarUML: Use Case және байланыс","Үш Use Case қос, Association арқылы байланыстыр, жүйе шекарасын салып, жобаны сақта."],
+["Жеке жоба","Өзіңе қызық жүйені таңда. Мәселе, 3 себеп, пайдаланушылар, мақсат, 5 міндет, функциялар, нәтиже және StarUML диаграммасы."]
+];
+var KEY="km01_progress", state=[];
+try{state=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){state=[]}
+var list=document.getElementById("list");
+function store(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function paint(){
+var n=state.length;
+document.getElementById("count").textContent=n+" / "+tasks.length;
+document.getElementById("fill").style.width=(n/tasks.length*100)+"%";
+document.querySelector(".bar").setAttribute("aria-valuenow",n);
+}
+tasks.forEach(function(t,i){
+var d=document.createElement("details");d.className="task";
+var s=document.createElement("summary");
+var c=document.createElement("input");c.type="checkbox";c.setAttribute("aria-label",(i+1)+"-тапсырма орындалды");
+var sp=document.createElement("span");sp.textContent=(i+1)+"-тапсырма. "+t[0];
+s.appendChild(c);s.appendChild(sp);
+var b=document.createElement("div");b.className="body";b.textContent=t[1];
+d.appendChild(s);d.appendChild(b);list.appendChild(d);
+function sync(){var on=state.indexOf(i)>-1;c.checked=on;d.classList.toggle("done",on)}
+c.addEventListener("click",function(e){e.stopPropagation()});
+c.addEventListener("change",function(){var k=state.indexOf(i);if(c.checked&&k<0)state.push(i);if(!c.checked&&k>-1)state.splice(k,1);sync();store();paint()});
+d._sync=sync;sync();
+});
+paint();
+function syncAll(){document.querySelectorAll(".task").forEach(function(d){d._sync()});paint();store()}
+document.getElementById("reset").onclick=function(){if(confirm("Барлық белгілер өшсін бе?")){state=[];syncAll()}};
+document.getElementById("save").onclick=function(){
+var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state)],{type:"application/json"}));a.download="km01_progress.json";a.click()};
+document.getElementById("load").onclick=function(){document.getElementById("file").click()};
+document.getElementById("file").onchange=function(e){
+var f=e.target.files[0];if(!f)return;var r=new FileReader();
+r.onload=function(){try{var a=JSON.parse(r.result);if(Array.isArray(a)){state=a.filter(function(x){return x>=0&&x<tasks.length});syncAll()}else alert("Файл дұрыс емес")}catch(err){alert("Файл дұрыс емес")}};
+r.readAsText(f)};
+var sl=document.getElementById("submitLink");
+if(FORM_URL){sl.href=FORM_URL}else{sl.addEventListener("click",function(e){e.preventDefault();alert("Жіберу сілтемесі әлі қосылмаған. Оқытушыңыздан сұраңыз.")})}
+</script>
+</body>
+</html>
